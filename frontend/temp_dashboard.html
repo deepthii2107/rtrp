@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coffee Shop Operations Monitor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#faf9f6",
+                        "primary": "#322118",
+                        "on-surface-variant": "#4e453d",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#5b4137",
+                        "inverse-surface": "#2f312f",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e3e2e0",
+                        "on-background": "#1a1c1a",
+                        "surface-dim": "#dbdad7",
+                        "surface-bright": "#faf9f6",
+                        "secondary-fixed": "#ffdbce",
+                        "on-tertiary-fixed": "#2b1701",
+                        "tertiary-container": "#4e3519",
+                        "tertiary-fixed": "#ffddbb",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#5c4224",
+                        "primary-fixed-dim": "#dec1b3",
+                        "primary-fixed": "#fbdcce",
+                        "on-primary-container": "#ba9f92",
+                        "surface-container-low": "#f4f3f1",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f2f1ee",
+                        "primary-container": "#49362c",
+                        "surface-tint": "#705a4f",
+                        "outline-variant": "#d2c4ba",
+                        "on-primary-fixed": "#281810",
+                        "secondary-container": "#fed7ca",
+                        "secondary-fixed-dim": "#e4beb2",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#75584d",
+                        "on-primary-fixed-variant": "#574238",
+                        "on-tertiary-container": "#c19e79",
+                        "on-secondary-container": "#795c51",
+                        "surface-container-high": "#e9e8e5",
+                        "inverse-primary": "#dec1b3",
+                        "tertiary": "#352006",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#e5c099",
+                        "outline": "#80756c",
+                        "surface-variant": "#e3e2e0",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#efeeeb",
+                        "on-surface": "#1a1c1a",
+                        "on-secondary-fixed": "#2b160f",
+                        "background": "#faf9f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #ffffff;
+        }
+        h1, h2, h3, .headline {
+            font-family: 'Epilogue', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex min-h-screen bg-white text-on-background">
+<!-- NavigationDrawer Shell -->
+<aside class="flex flex-col h-screen w-72 rounded-r-[2rem] border-none bg-[#faf9f6] sticky left-0 top-0 py-8 gap-2 shadow-[20px_0_40px_rgba(26,28,26,0.02)] z-50">
+<!-- Brand Header -->
+<div class="px-8 mb-8">
+<h2 class="text-2xl font-black text-[#322118] tracking-tight antialiased">Monitor</h2>
+</div>
+<!-- Profile Section -->
+<div class="px-8 mb-10 flex flex-col items-start font-['Epilogue'] tracking-tight antialiased">
+<img alt="Barista Profile" class="w-16 h-16 rounded-full mb-4 object-cover shadow-sm" data-alt="portrait of a professional head roaster in a clean apron with warm morning light in a coffee roastery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp6Z2uAlM0pEPc6cmvaaSg-J2DOHO4YaD5-pZ2uppQBfe-ZunIQupzq_OjjF3mhpQEEyxzoBMfr9ICI4aFTIR1pB6BnqsXfsNWurJTe_uamxQZfnWDHbSr1r9iwU9zE3J6FnQ30S2aXBsmRc0N_0nABIa4TuNPeS-tW3W9I1g31ssKndkEKdIojPesCv7fv9WiV9RGgu4vLmL0BiIkl9aJCIfeGeG-zPPeFIAEsxrEN-LRWx-OeLRPzGLW6qaToCw28IlJKxyMLKY"/>
+<h3 class="text-lg font-bold text-[#322118]">Marcus Vane</h3>
+<p class="text-sm text-on-surface-variant">Head Roaster</p>
+<p class="text-[10px] uppercase tracking-widest mt-1 text-primary/40 font-bold">Shift: 06:00 - 14:00</p>
+</div>
+<!-- Navigation Items -->
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 bg-gradient-to-r from-[#322118] to-[#49362c] text-white rounded-full px-6 py-3 font-semibold shadow-lg mx-4 transform transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-[#4e453d] px-6 py-3 font-medium mx-4 hover:bg-[#f4f3f1] transition-all duration-300 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="coffee_maker">coffee_maker</span>
+<span>Live Orders</span>
+</a>
+<a class="flex items-center gap-4 text-[#4e453d] px-6 py-3 font-medium mx-4 hover:bg-[#f4f3f1] transition-all duration-300 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="inventory">inventory</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-4 text-[#4e453d] px-6 py-3 font-medium mx-4 hover:bg-[#f4f3f1] transition-all duration-300 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="timer">timer</span>
+<span>Staff Clock</span>
+</a>
+<a class="flex items-center gap-4 text-[#4e453d] px-6 py-3 font-medium mx-4 hover:bg-[#f4f3f1] transition-all duration-300 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Analytics</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
+<!-- TopAppBar -->
+<header class="w-full h-20 sticky top-0 z-40 bg-[#faf9f6]/80 backdrop-blur-xl flex justify-between items-center px-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#322118] cursor-pointer" data-icon="menu_open">menu_open</span>
+<h1 class="font-['Epilogue'] text-2xl font-black bg-gradient-to-r from-[#322118] to-[#C8AD7F] bg-clip-text text-transparent uppercase tracking-widest">
+                    Worker Monitoring
+                </h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative cursor-pointer active:opacity-50">
+<span class="material-symbols-outlined text-[#322118] text-2xl" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface"></span>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<p class="font-['Epilogue'] text-lg font-bold text-[#322118]">Daily Operations</p>
+</div>
+</header>
+<div class="p-12 space-y-12">
+<!-- Stats Grid -->
+<section>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
+<!-- Stat Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_20px_40px_rgba(26,28,26,0.02)] hover:shadow-[0_20px_40px_rgba(26,28,26,0.05)] transition-shadow">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">System Status</p>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-xl font-bold text-primary headline">Operational</span>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_20px_40px_rgba(26,28,26,0.02)] hover:shadow-[0_20px_40px_rgba(26,28,26,0.05)] transition-shadow">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Uptime</p>
+<span class="text-2xl font-bold text-primary headline">99.8%</span>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_20px_40px_rgba(26,28,26,0.02)] hover:shadow-[0_20px_40px_rgba(26,28,26,0.05)] transition-shadow">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Active Alerts</p>
+<span class="text-2xl font-bold text-error headline">0</span>
+</div>
+<!-- Stat Card 4 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_20px_40px_rgba(26,28,26,0.02)] hover:shadow-[0_20px_40px_rgba(26,28,26,0.05)] transition-shadow">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Total Workers</p>
+<span class="text-2xl font-bold text-primary headline">12</span>
+</div>
+<!-- Stat Card 5 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_20px_40px_rgba(26,28,26,0.02)] hover:shadow-[0_20px_40px_rgba(26,28,26,0.05)] transition-shadow">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Active</p>
+<span class="text-2xl font-bold text-primary headline">8</span>
+</div>
+<!-- Stat Card 6 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_20px_40px_rgba(26,28,26,0.02)] hover:shadow-[0_20px_40px_rgba(26,28,26,0.05)] transition-shadow">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Idle</p>
+<span class="text-2xl font-bold text-primary headline">4</span>
+</div>
+</div>
+</section>
+<!-- Main Layout Grid: Live Monitoring & Workers Directory -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-12">
+<!-- Live Monitoring Section -->
+<section class="xl:col-span-8 space-y-6">
+<div class="flex justify-between items-end">
+<h2 class="text-2xl font-black text-primary headline">Live Stream</h2>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold">Main Barista Area</span>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-xs font-bold">Camera 04</span>
+</div>
+</div>
+<div class="relative aspect-video rounded-3xl overflow-hidden bg-stone-900 group shadow-2xl">
+<img alt="Live Stream" class="w-full h-full object-cover opacity-80" data-alt="overhead high angle cinematic shot of a modern boutique coffee bar with steam rising and baristas working in motion blur" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkYoxv6oFySI6o-IqFmYSX70Dg8mvXEhO8P3n_-DLzEqkkW0YNRXc_ZPP4PEAKUltM3MSTaaEcfWKRy0giZVPy6AeTF10fFzTM0Gf_e5YoKrqhmYv3i_aZTnOJ7iBJs61NvaFoTF45D5GxzNjD5vwwWRPd6iNcUiCvjhUQrhnuj5c-MjdZ8fz_UyxN8KPdDbqI4DvHENsiKLTxP9Ti8nO3mcI24IyBLHpwJtBU6u9yF5RJz4stjaya-9isodd-1h85Lq0aiI6PcCg"/>
+<!-- UI Overlays -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute top-6 left-6 flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+<span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+<span class="text-white text-xs font-bold tracking-widest uppercase">Live</span>
+</div>
+<div class="absolute bottom-6 left-6 text-white">
+<p class="text-lg font-bold headline">Front Counter Espresso Station</p>
+<p class="text-sm opacity-80">Shift Supervisor: Elena Rossi</p>
+</div>
+<div class="absolute bottom-6 right-6 flex gap-3">
+<button class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined text-white" data-icon="fullscreen">fullscreen</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined text-white" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Workers Directory Section -->
+<section class="xl:col-span-4 space-y-6">
+<h2 class="text-2xl font-black text-primary headline">Staff Directory</h2>
+<div class="space-y-4">
+<!-- Worker Card Active -->
+<div class="flex items-center gap-4 p-4 bg-surface rounded-2xl hover:bg-surface-container-low transition-all cursor-pointer group">
+<div class="relative">
+<img alt="Staff" class="w-12 h-12 rounded-full object-cover" data-alt="portrait of a young woman smiling in a professional barista uniform with shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL_ow0-_hH3XiRI8xaB8vmphZt1XH-NCB9V5q5bqK0xynCH4gPKP83tmTfAnDDOls4lBFHH87dbOFFS1AwrHsr41H5l1eQHSyRDCm-9yVvhfNjJkoH9F9tqIc2JWDlwcL9mWxOl-Qgjo5OL8qtgRzN7pTFUzy8Gns-0AnC9j5aZ-OHksIyaEAIYwxFfUa63ys8P7YmXWt36LUEC3pWVdd_5r0HWJiyTPDWDNiRaNgAxMbkKR9FYOo-htF_idacZCGsXURXzX5AJjI"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-surface shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-primary text-sm">Elena Rossi</h4>
+<p class="text-xs text-on-surface-variant">Lead Barista</p>
+</div>
+<span class="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full uppercase tracking-tighter">Active</span>
+</div>
+<!-- Worker Card Idle -->
+<div class="flex items-center gap-4 p-4 bg-surface rounded-2xl hover:bg-surface-container-low transition-all cursor-pointer group">
+<div class="relative">
+<img alt="Staff" class="w-12 h-12 rounded-full object-cover" data-alt="portrait of a bearded man in a coffee shop setting looking thoughtful" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeLvJyZMSXu09pYOmSs7HO7n5pLT-4xiM_RghlbwTlv9baNUwY1sRd2NZ7SP-ZvWBsgNV-UGzR-OgNBRefFzoi99vgRSvzp9e-FUzQ0vvTGMjU6Bs1psYrfKOvEnt7-0Z3dKzMAycynzr6s6wy_b62UeCsSl8jLe7DLkkMnR4mPQPEuiV8crLMerMdZByiINZJzESx4srC3eP_wXLN0okPc6I5fGHmgLJs24QKqiGTF5UinysY0Zgcdpx3tyfBYB6VvpdmaEyef-w"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-orange-400 border-2 border-surface shadow-[0_0_10px_rgba(251,146,60,0.5)]"></span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-primary text-sm">Julian Chen</h4>
+<p class="text-xs text-on-surface-variant">Roaster Assistant</p>
+</div>
+<span class="text-[10px] font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full uppercase tracking-tighter">Idle</span>
+</div>
+<!-- Worker Card Active -->
+<div class="flex items-center gap-4 p-4 bg-surface rounded-2xl hover:bg-surface-container-low transition-all cursor-pointer group">
+<div class="relative">
+<img alt="Staff" class="w-12 h-12 rounded-full object-cover" data-alt="headshot of a black woman in a modern coffee shop environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUAE99-_pk1494Ry-CASZ2aKjy6mDFbUwi3BjTSezYfcko26wDlwmgw8OALsu431rhnO2Bczvtp6-HFG1RfG8vsyMP6-MHDLDQh_yJ04CADOfGNIOvoViYHiXrZ3cQ5yjaD0iEuT5K94elXKzmDxMwpPrvStr4SrHTytWcC2AvLYv8W5j6LgpIucM0cQDt_oSW55rgK3nejiXGVR6MxcUZJvpqaWa8qP45RHCXEtfynF65R2DKaR2Bbr-bYaIyPsvclwqsyYhsJ8M"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-surface shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-primary text-sm">Maya Thompson</h4>
+<p class="text-xs text-on-surface-variant">Floor Manager</p>
+</div>
+<span class="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full uppercase tracking-tighter">Active</span>
+</div>
+<!-- Worker Card Idle -->
+<div class="flex items-center gap-4 p-4 bg-surface rounded-2xl hover:bg-surface-container-low transition-all cursor-pointer group">
+<div class="relative">
+<img alt="Staff" class="w-12 h-12 rounded-full object-cover" data-alt="portrait of a young man with a friendly expression in a bright indoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3OqTv16Y1o3L5Td93oF7BZwa7AEggGUvEBk4lOe0YpbnlAOHTqWivJXgxs_cSbGaDiPs2tV4OS4b0K0nNWzqgjFteAJC5CFRNMdgpcdvCa0YNTQNRfhD56O9xEj11bIjPBHiywaMrX6C1mRPk4tgkTfgi5Z3_vjrwaKNDZCtdYDIRfAZfoZyaF5FRedwv0cRipdmFDa8jnZ6aw4ak0jHhN67IdJi6waDUFnEK9HdDXwwIDIrNtdnJQ6yMhCYMLER8Gk0FYWXeyUg"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-orange-400 border-2 border-surface shadow-[0_0_10px_rgba(251,146,60,0.5)]"></span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-primary text-sm">Liam O'Connor</h4>
+<p class="text-xs text-on-surface-variant">Junior Barista</p>
+</div>
+<span class="text-[10px] font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full uppercase tracking-tighter">Idle</span>
+</div>
+<button class="w-full py-4 text-primary font-bold text-sm border-2 border-primary/10 rounded-2xl hover:bg-primary hover:text-white transition-all">
+                            View All Staff
+                        </button>
+</div>
+</section>
+</div>
+<!-- Custom Bento Grid Section: Roasting Analytics & Environment -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="lg:col-span-2 bg-secondary-container/30 p-8 rounded-[2rem] flex flex-col justify-between">
+<div>
+<h3 class="text-xl font-black text-primary headline mb-2">Today's Roasting Batch</h3>
+<p class="text-sm text-on-secondary-container">Ethiopean Yirgacheffe • Batch #882</p>
+</div>
+<div class="mt-8 flex items-end gap-1 h-32">
+<div class="flex-1 bg-primary/20 rounded-t-lg h-24"></div>
+<div class="flex-1 bg-primary/40 rounded-t-lg h-16"></div>
+<div class="flex-1 bg-primary/60 rounded-t-lg h-28"></div>
+<div class="flex-1 bg-primary rounded-t-lg h-32"></div>
+<div class="flex-1 bg-primary/80 rounded-t-lg h-20"></div>
+<div class="flex-1 bg-primary/40 rounded-t-lg h-26"></div>
+</div>
+</div>
+<div class="bg-surface-container p-8 rounded-[2rem] flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" data-icon="thermostat">thermostat</span>
+<p class="text-3xl font-black text-primary headline">21.5°C</p>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Ambient Temp</p>
+</div>
+<div class="bg-primary text-white p-8 rounded-[2rem] flex flex-col justify-between overflow-hidden relative group">
+<div class="relative z-10">
+<p class="text-xs font-bold uppercase tracking-widest opacity-60 mb-2">Inventory Alert</p>
+<h3 class="text-xl font-bold headline">Low Stock: Colombian Dark</h3>
+</div>
+<button class="relative z-10 bg-white text-primary px-4 py-2 rounded-full font-bold text-sm self-start mt-4">Order Now</button>
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[120px]" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

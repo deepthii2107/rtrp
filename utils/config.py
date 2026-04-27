@@ -17,10 +17,10 @@ YOLO_PERSON_CLASS_ID = 0
 # Expressed as fractions of frame (0.0–1.0) for resolution independence
 # Tight bottom-right gate: narrow strip acting as the physical entry threshold
 DEFAULT_ZONE_POLYGON = [
-    (0.72, 0.65),   # top-left
-    (0.97, 0.65),   # top-right
-    (0.97, 0.95),   # bottom-right
-    (0.72, 0.95),   # bottom-left
+    (0.35, 0.50),   # top-left
+    (0.65, 0.50),   # top-right
+    (0.65, 0.90),   # bottom-right
+    (0.35, 0.90),   # bottom-left
 ]
 
 # --- Centroid Tracker ---

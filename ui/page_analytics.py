@@ -8,6 +8,7 @@ import time
 
 from state.session_store import SessionStore
 from utils.config import DEFAULT_MOVEMENT_THRESHOLD, DEFAULT_IDLE_TIMEOUT_SECONDS, TARGET_FPS, YOLO_MODEL_PATH
+from utils.video_source import get_video_path
 
 def render() -> None:
     st.header("📈 Analytics & Settings")
@@ -87,9 +88,10 @@ def render() -> None:
     
     import torch
     dev = "CUDA (GPU)" if torch.cuda.is_available() else "CPU"
+    video_path = get_video_path()
     
     st.code(f"""
-Video Source: reference_video.mp4
+Video Source: {video_path}
 Device in Use: {dev}
 Model: {YOLO_MODEL_PATH}
 Target FPS: {TARGET_FPS} (measured dynamically in HUD)

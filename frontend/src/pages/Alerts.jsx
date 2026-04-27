@@ -1,29 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Card from '../components/Card';
 import '../App.css';
+import { fetchAlerts as fetchAlertsFromApi } from '../lib/telemetry';
 
 const Alerts = () => {
   const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
-    const fetchAlerts = async () => {
+    const loadAlerts = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/alerts');
-        if (response.ok) {
-          const data = await response.json();
-          if (Array.isArray(data)) {
-            setAlerts(data);
-          } else if (data && data.alerts) {
-            setAlerts(data.alerts);
-          }
-        }
+        setAlerts(await fetchAlertsFromApi());
       } catch (error) {
         console.error('Failed to fetch alerts:', error);
       }
     };
 
-    fetchAlerts();
-    const interval = setInterval(fetchAlerts, 2000);
+    loadAlerts();
+    const interval = setInterval(loadAlerts, 2000);
     return () => clearInterval(interval);
   }, []);
 
@@ -43,7 +36,7 @@ const Alerts = () => {
             return (
               <Card key={alert.id || index} title={title}>
                  <div style={{ marginTop: '8px', color: 'var(--text-primary)' }}>
-                   {alert.message || JSON.stringify(alert)}
+                   {alert.message || 'Alert details are currently unavailable.'}
                  </div>
                  {alert.timestamp && (
                    <div style={{ marginTop: '12px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>

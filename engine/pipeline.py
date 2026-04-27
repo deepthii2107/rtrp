@@ -88,6 +88,10 @@ class VisionPipeline:
         self.authorized_worker_ids: set[int] = set()
         # Previous centroid positions per worker — used to compute displacement
         self._prev_centroids: dict[int, tuple[int, int]] = {}
+        
+        # Appearance tracking
+        self._primary_worker_hist = None
+        self._last_known_bbox = None
 
         self._thread     = None
         self._stop_event = threading.Event()
@@ -104,6 +108,8 @@ class VisionPipeline:
         self._thread.start()
         with self.session_store._lock:
             self.session_store.is_pipeline_running = True
+            self.session_store.pipeline_error = None
+            self.session_store.current_video_path = self.video_path
         logger.info("Pipeline thread started.")
 
     def stop(self) -> None:
@@ -124,8 +130,15 @@ class VisionPipeline:
     def _run(self) -> None:
         cap = cv2.VideoCapture(self.video_path)
         if not cap.isOpened():
-            logger.error(f"Cannot open video: {self.video_path}")
+            error_message = f"Cannot open video: {self.video_path}"
+            logger.error(error_message)
+            with self.session_store._lock:
+                self.session_store.is_pipeline_running = False
+                self.session_store.pipeline_error = error_message
             return
+
+        with self.session_store._lock:
+            self.session_store.pipeline_error = None
 
         frame_interval = 1.0 / max(1, TARGET_FPS)
         last_proc_time = 0.0
@@ -137,6 +150,14 @@ class VisionPipeline:
             ret, frame = cap.read()
             if not ret:
                 cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                # Reset backend state completely to ensure a clean video loop
+                self.tracker.objects.clear()
+                self.tracker.next_worker_id = 1
+                self.classifier.workers.clear()
+                self.authorized_worker_ids.clear()
+                self._prev_centroids.clear()
+                self._primary_worker_hist = None
+                self._last_known_bbox = None
                 continue
 
             now = time.time()
@@ -182,16 +203,70 @@ class VisionPipeline:
         # 2. Update tracker → stable IDs
         tracked = self.tracker.update(detections)
 
-        # 3. Gate authorization — check if any tracked worker's bbox touches the gate
-        for wid, obj in tracked.items():
-            x1, y1, x2, y2 = obj["bbox"]
-            if self.zone_mgr.bbox_touches_zone(x1, y1, x2, y2, w, h):
-                if wid not in self.authorized_worker_ids:
-                    logger.info(f"Worker W-{wid} authorized via gate crossing.")
-                self.authorized_worker_ids.add(wid)
-
-        # Purge IDs the tracker has dropped from the authorized set
+        # 3. Gate authorization & Smart Re-recognition
+        # First, purge any IDs the tracker naturally dropped
         self.authorized_worker_ids &= set(tracked.keys())
+
+        # If we currently have no authorized worker, try to find one
+        if len(self.authorized_worker_ids) == 0:
+            best_match_id = None
+            best_match_score = -1.0 
+
+            # RECOVERY: Do we have a known appearance signature?
+            if self._primary_worker_hist is not None:
+                for wid, obj in tracked.items():
+                    x1, y1, x2, y2 = obj["bbox"]
+                    x1, y1 = max(0, x1), max(0, y1)
+                    x2, y2 = min(w, x2), min(h, y2)
+                    
+                    if x2 <= x1 or y2 <= y1:
+                        continue
+                        
+                    worker_roi = frame[y1:y2, x1:x2]
+                    hsv_roi = cv2.cvtColor(worker_roi, cv2.COLOR_BGR2HSV)
+                    hist = cv2.calcHist([hsv_roi], [0, 1], None, [16, 16], [0, 180, 0, 256])
+                    cv2.normalize(hist, hist, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
+                    
+                    score = cv2.compareHist(self._primary_worker_hist, hist, cv2.HISTCMP_CORREL)
+                    
+                    # Lock onto same visual appearance if strongly correlated
+                    if score > 0.85 and score > best_match_score:
+                        best_match_score = score
+                        best_match_id = wid
+                
+                if best_match_id is not None:
+                    logger.info(f"Worker RE-RECOGNIZED as W-{best_match_id} (Hist Score: {best_match_score:.2f})")
+                    self.authorized_worker_ids.add(best_match_id)
+            
+            # INITIALIZATION: If recovery failed or first run, lock via gate zone
+            if len(self.authorized_worker_ids) == 0:
+                for wid, obj in tracked.items():
+                    x1, y1, x2, y2 = obj["bbox"]
+                    if self.zone_mgr.bbox_touches_zone(x1, y1, x2, y2, w, h):
+                        logger.info(f"Worker W-{wid} explicitly authorized via zone crossing.")
+                        self.authorized_worker_ids.add(wid)
+                        break
+
+        # Extract/update visual signature & filter detections for the rest of pipeline
+        filtered_tracked = {}
+        for wid, obj in tracked.items():
+            if wid in self.authorized_worker_ids:
+                filtered_tracked[wid] = obj
+                
+                x1, y1, x2, y2 = obj["bbox"]
+                x1, y1 = max(0, x1), max(0, y1)
+                x2, y2 = min(w, x2), min(h, y2)
+                if x2 > x1 and y2 > y1:
+                    worker_roi = frame[y1:y2, x1:x2]
+                    hsv_roi = cv2.cvtColor(worker_roi, cv2.COLOR_BGR2HSV)
+                    hist = cv2.calcHist([hsv_roi], [0, 1], None, [16, 16], [0, 180, 0, 256])
+                    cv2.normalize(hist, hist, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
+                    
+                    self._primary_worker_hist = hist
+                    self._last_known_bbox = obj["bbox"]
+
+        # Overwrite tracked variable to ensure only the authorized worker propagates downward
+        tracked = filtered_tracked
 
         # 4. Activity classification — only for authorized workers
         authorized_count = 0
@@ -272,5 +347,7 @@ class VisionPipeline:
             self.session_store.worker_states = new_worker_states
             self.session_store.in_zone_count = authorized_count
             self.session_store.authorized_count = authorized_count
+            self.session_store.latest_fps = float(fps or 0.0)
 
         self.session_store.update_frame(annotated)
+        self.session_store.record_telemetry_snapshot(timestamp=now)

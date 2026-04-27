@@ -22,6 +22,7 @@ torch.load = _patched_torch_load
 
 from state.session_store import SessionStore
 from utils.config import DEFAULT_ZONE_POLYGON
+from utils.video_source import get_video_path
 try:
     from engine.pipeline import VisionPipeline
 except ImportError:
@@ -32,6 +33,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 def main():
+    video_path = get_video_path()
+
     st.set_page_config(
         page_title="Coffee Shop Worker Monitor",
         page_icon="☕",
@@ -50,7 +53,7 @@ def main():
 
         try:
             pipeline = VisionPipeline(
-                video_path="reference_video.mp4",
+                video_path=video_path,
                 session_store=st.session_state.store,
                 device=device
             )
@@ -58,7 +61,7 @@ def main():
             st.session_state.pipeline = pipeline
         except FileNotFoundError as e:
             st.error(f"Cannot initialize Pipeline. {e}")
-            st.warning("Please ensure 'reference_video.mp4' exists in the root directory context.")
+            st.warning(f"Please ensure the configured video exists. Current VIDEO_PATH: {video_path}")
             st.stop()
         except Exception as e:
             st.error(f"An unexpected error occurred: {e}")

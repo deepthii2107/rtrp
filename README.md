@@ -17,12 +17,41 @@ This project is an automated vision pipeline crafted to monitor coffee shop staf
    *Note: The YOLOv8 weights (`yolov8n.pt`) and MediaPipe models will automatically download on their first run.*
 
 ## 4. Running the App
-1. Place a reference video file named `reference_video.mp4` into the root directory.
+1. Place your video in the project root, or keep note of its full path.
 2. Run the application via Streamlit:
    ```bash
    streamlit run app.py
    ```
 3. Navigate to the local URL provided by Streamlit.
+
+Optional: set a custom input video before starting the app.
+
+```powershell
+$env:VIDEO_PATH="my-new-video.mp4"
+streamlit run app.py
+```
+
+If `VIDEO_PATH` is not set, the app still defaults to `reference_video.mp4`.
+
+### FastAPI + Frontend Dev Mode
+
+Run both the FastAPI backend and the Vite frontend with one command from the repo root:
+
+```powershell
+.\start-dev.ps1
+```
+
+This starts:
+- frontend at `http://127.0.0.1:3000`
+- backend at `http://127.0.0.1:8000`
+
+To stop both tracked services:
+
+```powershell
+.\stop-dev.ps1
+```
+
+Runtime logs are written to the repo `logs/` directory.
 
 ## 5. Configuration
 All central settings and magic numbers are housed within `utils/config.py`. Adjust threshold defaults, tracking parameters, and color hex values there. For real-time overrides of sensitivity and idle bounds, utilize the sliders on the Analytics page of the UI.

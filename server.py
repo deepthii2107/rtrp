@@ -36,6 +36,7 @@ torch.load = _patched_torch_load
 
 from state.session_store import SessionStore
 from utils.config import DEFAULT_ZONE_POLYGON
+from utils.video_source import get_video_path
 from engine.pipeline import VisionPipeline
 
 # ---------------------------------------------------------------------------
@@ -53,6 +54,8 @@ logger = logging.getLogger(__name__)
 store = SessionStore()
 store.zone_polygon = DEFAULT_ZONE_POLYGON
 
+SERVER_START_TIME = time.time()
+
 from typing import Optional
 
 pipeline: Optional[VisionPipeline] = None
@@ -67,10 +70,11 @@ async def lifespan(app: FastAPI):
     global pipeline
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    video_path = get_video_path()
     logger.info(f"Using device: {device}")
 
     pipeline = VisionPipeline(
-        video_path="reference_video.mp4",
+        video_path=video_path,
         session_store=store,
         device=device,
     )
@@ -171,15 +175,31 @@ def video_stream():
     summary="Server health check",
 )
 def health():
-    """Returns current pipeline status."""
+    """Returns current pipeline status and server uptime."""
+    current_time = time.time()
     return JSONResponse({
         "status": "ok",
         "pipeline_running": pipeline.is_running() if pipeline else False,
+        "video_path": store.current_video_path,
+        "pipeline_error": store.pipeline_error,
+        "uptime_seconds": current_time - SERVER_START_TIME,
+        "start_time": SERVER_START_TIME,
+        "latest_fps": store.get_latest_fps(),
     })
+
 @app.get("/workers")
 def get_workers():
-    return store.get_workers()
+    return JSONResponse({
+        "workers": store.serialize_workers(),
+    })
 
 @app.get("/alerts")
 def get_alerts():
-    return store.get_active_alerts()
+    return JSONResponse({
+        "alerts": store.get_active_alerts(),
+        "history_count": len(store.get_alert_history()),
+    })
+
+@app.get("/analytics")
+def get_analytics():
+    return JSONResponse(store.build_analytics_snapshot(server_start_time=SERVER_START_TIME))

@@ -1,0 +1,73 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: "class",
+  theme: {
+      extend: {
+          "colors": {
+              "surface": "#faf9f6",
+              "primary": "#322118",
+              "on-surface-variant": "#4e453d",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed-variant": "#5b4137",
+              "inverse-surface": "#2f312f",
+              "error-container": "#ffdad6",
+              "surface-container-highest": "#e3e2e0",
+              "on-background": "#1a1c1a",
+              "surface-dim": "#dbdad7",
+              "surface-bright": "#faf9f6",
+              "secondary-fixed": "#ffdbce",
+              "on-tertiary-fixed": "#2b1701",
+              "tertiary-container": "#4e3519",
+              "tertiary-fixed": "#ffddbb",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#5c4224",
+              "primary-fixed-dim": "#dec1b3",
+              "primary-fixed": "#fbdcce",
+              "on-primary-container": "#ba9f92",
+              "surface-container-low": "#f4f3f1",
+              "on-error": "#ffffff",
+              "inverse-on-surface": "#f2f1ee",
+              "primary-container": "#49362c",
+              "surface-tint": "#705a4f",
+              "outline-variant": "#d2c4ba",
+              "on-primary-fixed": "#281810",
+              "secondary-container": "#fed7ca",
+              "secondary-fixed-dim": "#e4beb2",
+              "on-tertiary": "#ffffff",
+              "secondary": "#75584d",
+              "on-primary-fixed-variant": "#574238",
+              "on-tertiary-container": "#c19e79",
+              "on-secondary-container": "#795c51",
+              "surface-container-high": "#e9e8e5",
+              "inverse-primary": "#dec1b3",
+              "tertiary": "#352006",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "tertiary-fixed-dim": "#e5c099",
+              "outline": "#80756c",
+              "surface-variant": "#e3e2e0",
+              "on-secondary": "#ffffff",
+              "surface-container": "#efeeeb",
+              "on-surface": "#1a1c1a",
+              "on-secondary-fixed": "#2b160f",
+              "background": "#faf9f6"
+          },
+          "borderRadius": {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+          },
+          "fontFamily": {
+              "headline": ["Epilogue"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+          }
+      },
+  },
+  plugins: [],
+}
